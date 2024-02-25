@@ -52,33 +52,48 @@ app.get('/type', async(req, res) => {
     }
 })
 
-app.get('/joke', async(req, res) => {
-    try
+app.get('/joke', async (req, res) => {
+    const { type, count } = req.query;
+    try 
     {
-        const result = await getJokes();
-        res.send(result);
-    }
-    catch(err)
+        const jokes = await getJokes(type, count);
+        res.json(jokes);
+    } 
+    catch (err) 
     {
-        res.status(500).send(err);
+        res.status(500).send(err.message);
     }
-})
+});
 
-async function getJokes() {
-    const result = new Promise((resolve, reject) => {
-        const sql = `select * from jokes`;
-        db.query(sql, (err, results) => {
-            if (err)
+async function getJokes(type = 'any', count = 1) 
+{
+    // Dynamically build the SQL query based on input
+    let sql = '';
+    const params = [];
+
+    if (type === 'any') 
+    {
+        sql = `SELECT * FROM jokes ORDER BY RAND() LIMIT ?`;
+        params.push(parseInt(count, 10) || 1);
+    } 
+    else 
+    {
+        sql = `SELECT * FROM jokes WHERE type = ? ORDER BY RAND() LIMIT ?`;
+        params.push(type, parseInt(count, 10) || 1);
+    }
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, params, (err, results) => {
+            if (err) 
             {
                 reject(`Database error: ${err.message}`);
-            }
-            else
+            } 
+            else 
             {
                 resolve(results);
             }
-        })
-    })
-    return result;
+        });
+    });
 }
 
 async function getTypes(){
