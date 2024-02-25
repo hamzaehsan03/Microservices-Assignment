@@ -3,19 +3,38 @@ const app = express();
 const mysql = require('mysql2')
 const PORT = 3000;
 
+// I'm not too sure why this doesn't work
+// Debug later
+require ('dotenv').config();
+
+// const DB_HOST = process.env.HOST;
+// const DB_USER = process.env.DB_USER;
+// const DB_PASSWORD = process.env.DB_PASSWORD;
+// const DB_DATABASE = process.env.DB_DATABASE;
+
 // let conStr = {
-//     host: process.env.DB_HOST,
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     database: process.env.DB_DATABASE
-// }
+//     host: DB_HOST,
+//     user: DB_USER,
+//     password: DB_PASSWORD,
+//     database: DB_DATABASE
+// };
 
-// const db = mysql.createConnection(conStr);
+let conStr = {
+    host: 'localhost',
+    user: 'root',
+    password: 'admin',
+    database: 'jokes_service'
+};
 
-// db.connect((err) => {
-//     if (err) throw err;
-//     console.log(`Connected to database: ${conStr.database}`);
-// })
+const db = mysql.createConnection(conStr);
+
+db.connect((err) => {
+    if (err) {
+        console.error('Error connecting to the database: ', err);
+        return;
+    }
+    console.log(`Connected to database: ${conStr.database}`);
+});
 
 app.get('/', (req, res) => {
     res.send('Hello world');
