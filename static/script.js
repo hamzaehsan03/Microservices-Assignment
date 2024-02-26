@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Remember the current selection for the dropdown
             const currentSelection = jokeTypeSelect.value;
-            jokeTypeSelect.innerHTML = '<option value="any">Any</option>'; // Reset and add default 'any' option
+            // Add a default Any option
+            jokeTypeSelect.innerHTML = '<option value="any">Any</option>';
             
             types.forEach(type => {
                 const option = document.createElement('option');

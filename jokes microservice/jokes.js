@@ -66,31 +66,26 @@ app.get('/joke', async (req, res) => {
     }
 });
 
-async function getJokes(type = 'any', count = 1) 
-{
-    // Dynamically build the SQL query based on input
+async function getJokes(type = 'any', count = 1) {
     let sql = '';
     const params = [];
 
-    if (type === 'any') 
-    {
-        sql = `SELECT * FROM jokes ORDER BY RAND() LIMIT ?`;
+    // Adjust the query to join jokes with their types
+    if (type === 'any') {
+        // If 'any' is selected, simply return random jokes without filtering by type
+        sql = `SELECT jokes.* FROM jokes ORDER BY RAND() LIMIT ?`;
         params.push(parseInt(count, 10) || 1);
-    } 
-    else 
-    {
-        sql = `SELECT * FROM jokes WHERE type = ? ORDER BY RAND() LIMIT ?`;
+    } else {
+        // Join with the joke_types table to filter by type_name
+        sql = `SELECT jokes.* FROM jokes JOIN joke_types ON jokes.type_id = joke_types.id WHERE joke_types.type_name = ? ORDER BY RAND() LIMIT ?`;
         params.push(type, parseInt(count, 10) || 1);
     }
 
     return new Promise((resolve, reject) => {
         db.query(sql, params, (err, results) => {
-            if (err) 
-            {
+            if (err) {
                 reject(`Database error: ${err.message}`);
-            } 
-            else 
-            {
+            } else {
                 resolve(results);
             }
         });
