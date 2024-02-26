@@ -1,4 +1,5 @@
 const express = require ('express');
+
 const app = express();
 const mysql = require('mysql2')
 const PORT = 3000;
@@ -6,7 +7,7 @@ const PORT = 3000;
 // I'm not too sure why this doesn't work
 // Debug later
 require ('dotenv').config();
-
+app.use(express.static('static'));
 // const DB_HOST = process.env.HOST;
 // const DB_USER = process.env.DB_USER;
 // const DB_PASSWORD = process.env.DB_PASSWORD;
