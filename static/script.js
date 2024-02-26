@@ -29,6 +29,37 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error fetching joke types:', error);
         }
     }
+    
+
+    // Function to fetch a joke
+    async function fetchJoke() {
+        const type = jokeTypeSelect.value;
+        try 
+        {
+            const response = await fetch(`/joke?type=${encodeURIComponent(type)}`);
+            if (!response.ok) 
+            {
+                throw new Error('Failed to fetch joke');
+            }
+            const jokes = await response.json();
+
+            if (jokes.length > 0) 
+            {
+                jokeDisplay.textContent = jokes[0].joke_text;
+            } 
+
+            else 
+            {
+                jokeDisplay.textContent = 'No joke found for the selected type.';
+            }
+        } 
+        
+        catch (error) 
+        {
+            console.error('Error fetching joke:', error);
+            jokeDisplay.textContent = 'Failed to fetch joke.';
+        }
+    }
 
     // Initial fetch of joke types when the page loads
     fetchJokeTypes();
@@ -36,4 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Refetch joke types when the dropdown is clicked
     jokeTypeSelect.addEventListener('click', fetchJokeTypes);
 
+    // Fetch a joke when the 'Get Joke' button is clicked
+    getJokeButton.addEventListener('click', fetchJoke);
 });
