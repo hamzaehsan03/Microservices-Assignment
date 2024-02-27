@@ -1,13 +1,14 @@
 const express = require ('express');
 
 const app = express();
-const mysql = require('mysql2')
+const path = require('path');
+const mysql = require('mysql2');
 const PORT = 3000;
 
 // I'm not too sure why this doesn't work
 // Debug later
 require ('dotenv').config();
-app.use(express.static('static'));
+
 // const DB_HOST = process.env.HOST;
 // const DB_USER = process.env.DB_USER;
 // const DB_PASSWORD = process.env.DB_PASSWORD;
@@ -19,6 +20,7 @@ app.use(express.static('static'));
 //     password: DB_PASSWORD,
 //     database: DB_DATABASE
 // };
+app.use(express.static('static'));
 
 let conStr = {
     host: 'localhost',
@@ -37,8 +39,8 @@ db.connect((err) => {
     console.log(`Connected to database: ${conStr.database}`);
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello world');
+app.get(['/', '/index.html'], (req, res) => {
+    res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
 app.get('/type', async(req, res) => {
