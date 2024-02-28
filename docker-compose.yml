@@ -9,6 +9,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
       - mysql-data:/var/lib/mysql
     networks:
       - jokes-network
@@ -19,7 +20,7 @@ services:
       dockerfile: Dockerfile
 
     environment:
-      - DB_HOST=microservicesassignment-db-1
+      - DB_HOST=db
       - DB_USER=${MYSQL_USER}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_DATABASE=${MYSQL_DATABASE}
