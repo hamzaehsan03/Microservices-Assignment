@@ -49,4 +49,4 @@ async function consumeMessage()
     })
 }
 
-consumeMessages().catch(console.warn);
+consumeMessage().catch(console.warn);
