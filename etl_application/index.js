@@ -1,5 +1,5 @@
-require ('dotenv');
-const ampq = require('amqplib');
+require ('dotenv').config();
+const amqp = require('amqplib');
 const mysql = require('mysql2');
 
 const queue = 'jokesQueue';
@@ -23,7 +23,7 @@ async function connectToDatabase(){
 
 async function consumeMessage()
 {
-    const conn = await ampq.connect('ampq://rabbitmq');
+    const conn = await amqp.connect('amqp://rabbitmq');
     const channel = await conn.createChannel();
 
     await channel.assertQueue(queue, {durable: false});

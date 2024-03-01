@@ -14,11 +14,12 @@ services:
     networks:
       - jokes-network
 
+
+
   jokes-service:
     build: 
       context: ./jokes_microservice
       dockerfile: Dockerfile
-
     environment:
       - DB_HOST=db
       - DB_USER=${MYSQL_USER}
@@ -30,6 +31,30 @@ services:
       - db
     networks:
       - jokes-network 
+  
+
+
+  etl_service:
+    build:
+      context: ./etl_application
+    environment:
+      - DB_HOST=db
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_DATABASE=${MYSQL_DATABASE}    
+    depends_on:
+      - db
+      - rabbitmq   
+    networks:
+      - jokes-network
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - jokes-network
 
 volumes:
   mysql-data:
