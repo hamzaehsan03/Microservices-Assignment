@@ -1,73 +1,38 @@
 services:
   db:
     image: mysql:8.0
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    env_file:
+      - .env
+
     ports:
       - "3306:3306"
     restart: unless-stopped
     volumes:
       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
       - mysql-data:/var/lib/mysql
-    networks:
-      - jokes-network
-
 
 
   jokes-service:
     build: 
       context: ./jokes_microservice
       dockerfile: Dockerfile
-    environment:
-      - DB_HOST=db
-      - DB_USER=${MYSQL_USER}
-      - DB_PASSWORD=${MYSQL_PASSWORD}
-      - DB_DATABASE=${MYSQL_DATABASE}
+    env_file:
+      - .env
+
     ports:
       - "80:3000"
     restart: unless-stopped
-    # depends_on:
-    #   - db
-    networks:
-      - jokes-network 
-  
 
 
   etl_service:
     build:
       context: ./etl_application
-    environment:
-      - DB_HOST=db
-      - DB_USER=${MYSQL_USER}
-      - DB_PASSWORD=${MYSQL_PASSWORD}
-      - DB_DATABASE=${MYSQL_DATABASE}  
+    env_file:
+      - .env
+
     restart: unless-stopped  
     depends_on:
       - db
-      - rabbitmq   
-    networks:
-      - jokes-network
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    #hostname: rabbitmq
-    #container_name: rabbitmq
-    restart: unless-stopped
-
-    ports:
-      - 5672:5672   # Message broker. Make ports same as we won't be accessing from internet
-      - 15672:15672 # Management interface. Make ports same as it's meant to be accessed via the internet
-
-    # volumes:
-    #   - rabbit-vol:/var/lib/rabbitmq  # Where to store the queued data
-    networks:
-      - jokes-network
 
 volumes:
   mysql-data:
-
-networks:
-  jokes-network:
