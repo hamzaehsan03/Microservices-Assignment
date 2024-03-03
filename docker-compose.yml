@@ -8,6 +8,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
+    restart: unless-stopped
     volumes:
       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
       - mysql-data:/var/lib/mysql
@@ -27,8 +28,9 @@ services:
       - DB_DATABASE=${MYSQL_DATABASE}
     ports:
       - "80:3000"
-    depends_on:
-      - db
+    restart: unless-stopped
+    # depends_on:
+    #   - db
     networks:
       - jokes-network 
   
@@ -41,7 +43,8 @@ services:
       - DB_HOST=db
       - DB_USER=${MYSQL_USER}
       - DB_PASSWORD=${MYSQL_PASSWORD}
-      - DB_DATABASE=${MYSQL_DATABASE}    
+      - DB_DATABASE=${MYSQL_DATABASE}  
+    restart: unless-stopped  
     depends_on:
       - db
       - rabbitmq   
@@ -49,10 +52,17 @@ services:
       - jokes-network
 
   rabbitmq:
-    image: "rabbitmq:3-management"
+    image: rabbitmq:3-management
+    #hostname: rabbitmq
+    #container_name: rabbitmq
+    restart: unless-stopped
+
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 5672:5672   # Message broker. Make ports same as we won't be accessing from internet
+      - 15672:15672 # Management interface. Make ports same as it's meant to be accessed via the internet
+
+    # volumes:
+    #   - rabbit-vol:/var/lib/rabbitmq  # Where to store the queued data
     networks:
       - jokes-network
 

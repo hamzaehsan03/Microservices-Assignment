@@ -28,7 +28,7 @@ function connectToDatabase(retryCount = 0)
             else 
             {
                 console.error('Failed to connect to the database after retries. Exiting.');
-                process.exit(1); // Exit the application if unable to connect
+                //process.exit(1); // Exit the application if unable to connect
             }
         } 
         else 
