@@ -5,7 +5,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
+    height: auto; 
     margin: 0;
 }
 
@@ -37,7 +37,7 @@ select#jokeType, textarea#jokeText, button#submitJoke {
 }
 
 button#submitJoke {
-    background-color: #007bff;
+    background-color: #576E9E;
     color: white;
     border: none;
     cursor: pointer;
