@@ -25,7 +25,7 @@ form#jokeForm {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 100%; 
 }
 
 select#jokeType, textarea#jokeText, button#submitJoke {
@@ -33,7 +33,7 @@ select#jokeType, textarea#jokeText, button#submitJoke {
     margin: 10px 0;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width: calc(80%); 
+    width: calc(100% - 20px);
 }
 
 button#submitJoke {
