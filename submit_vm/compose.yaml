@@ -1,0 +1,34 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    container_name: rabbitmq
+    restart: unless-stopped
+    
+    environment:
+     - RABBITMQ_DEFAULT_USER=admin
+     - RABBITMQ_DEFAULT_PASS=admin
+     - RABBITMQ_USER=root
+     - RABBITMQ_PASS=root
+
+    ports:
+      - 5672:5672   # Message broker. Make ports same as we won't be accessing from internet
+      - 15672:15672 # Management interface. Make ports same as it's meant to be accessed via the internet
+
+    volumes:
+      - rabbit-vol:/var/lib/rabbitmq  # Where to store the queued data
+
+
+  submit-service:
+    build: 
+      context: ./submit_vm
+      dockerfile: Dockerfile
+    image : hamzaehsan03/submit-service
+    pull_policy: always
+    container_name: submit-service
+    env_file:
+      - .env
+
+    ports:
+      - ${JOKE_CONTAINER_PORT}:${JOKE_PORT}
+    restart: unless-stopped
