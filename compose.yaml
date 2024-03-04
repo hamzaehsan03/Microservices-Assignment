@@ -1,0 +1,45 @@
+services:
+  db:
+    image: mysql:8.0
+    env_file:
+      - .env
+
+    ports:
+      - ${MYSQL_CONTAINER_PORT}:${MYSQL_PORT}
+    restart: unless-stopped
+    volumes:
+#      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - mysql-data:/var/lib/mysql
+
+
+  jokes-service:
+    build: 
+      context: ./jokes_microservice
+      dockerfile: Dockerfile
+    image : hamzaehsan03/jokes-service
+    pull_policy: always
+    container_name: jokes-service
+    env_file:
+      - .env
+
+    ports:
+      - ${JOKE_CONTAINER_PORT}:${JOKE_PORT}
+    restart: unless-stopped
+
+
+  # etl_service:
+  #   build:
+  #     context: ./etl_application
+  #     dockerfile: Dockerfile
+    
+  #   image: hamzaehsan03/etl-application
+  #   pull_policy: always
+  #   container_name: etl-application
+  #   env_file:
+  #     - .env
+  #   restart: unless-stopped  
+  #   depends_on:
+  #    - db
+
+volumes:
+  mysql-data:

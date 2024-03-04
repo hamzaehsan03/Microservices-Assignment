@@ -2,34 +2,35 @@ const express = require ('express');
 const app = express();
 const path = require('path');
 const mysql = require('mysql2');
-const PORT = 3000;
 
-require ('dotenv').config();
+const PORT = process.env.JOKE_PORT || 3000
+
+//require ('dotenv').config();
 
 let db;
 
 function connectToDatabase(retryCount = 0) 
 {
     db = mysql.createConnection ({
-        host: process.env.DB_HOST || db,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.MYSQL_USER || 'hamzaehsan',
+        password: process.env.MYSQL_PASSWORD || 'admin',
+        database: process.env.MYSQL_DATABASE || 'jokes_service'
     });
 
     db.connect(err => {
         if (err) 
         {
             console.error(`Error connecting to the database: ${err}`);
-            if (retryCount < 5) {
+        //    if (retryCount < 5) {
 
-                setTimeout(() => connectToDatabase(retryCount + 1), 5000); // Retry after 5 seconds
-            } 
-            else 
-            {
-                console.error('Failed to connect to the database after retries. Exiting.');
-                //process.exit(1); // Exit the application if unable to connect
-            }
+        //        setTimeout(() => connectToDatabase(retryCount + 1), 5000); // Retry after 5 seconds
+        //    } 
+        //    else 
+        //    {
+        //        console.error('Failed to connect to the database after retries. Exiting.');
+                process.exit(1); // Exit the application if unable to connect
+        //    }
         } 
         else 
         {

@@ -1,6 +1,8 @@
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: jokes_service
+CREATE DATABASE IF NOT EXISTS `jokes_service`;
+USE `jokes_service`;
 -- ------------------------------------------------------
 -- Server version	8.3.0
 
