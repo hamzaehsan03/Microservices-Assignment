@@ -41,46 +41,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function getSubmission()
-    {
-        const jokeType = document.getElementById('jokeType').value();
-        const jokeText = document.getElementById('jokeText').value();
-
-        try
-        {
-            fetch('/sub', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: jokeType,
-                    jokeText: jokeText
-                })
+    document.getElementById('jokeForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent traditional form submission
+    
+        const jokeType = document.getElementById('jokeType').value;
+        const jokeText = document.getElementById('jokeText').value;
+    
+        fetch('/sub', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: jokeType,
+                jokeText: jokeText
             })
-            .then(response => {
-                if (!response.ok)
-                {
-                    throw new Error('Failed to submit joke')
-                }
-                return response.text();
-            })
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.log(`Error ${error}`)
-            });
-        }
-        catch(error)
-        {
-            console.log(`Error ${error}`)
-        }
-    }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to submit joke');
+            }
+            return response.text(); // Or .json() if your server responds with JSON
+        })
+        .then(data => {
+            console.log(data);
+            // Handle success here (e.g., show a success message)
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle failure here (e.g., show an error message)
+        });
+    });
 
     fetchJokeTypes();
 
     jokeTypeSelect.addEventListener('click', fetchJokeTypes);
-    submitJokeButton.addEventListener('click', getSubmission);
+    jokeFormSelect.addEventListener('submit', function(event) 
+    {
+        event.preventDefault();
+        getSubmission();
+    });
+    //submitJokeButton.addEventListener('click', getSubmission);
 
 });
