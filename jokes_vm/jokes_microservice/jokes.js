@@ -1,11 +1,12 @@
 const express = require ('express');
+const cors = require('cors');
 const app = express();
 const path = require('path');
 const mysql = require('mysql2');
 
 const PORT = process.env.JOKE_PORT || 3000
 
-//require ('dotenv').config();
+app.use(cors()); // Allow for the submit microservice to access /type endpoint
 
 let db;
 
