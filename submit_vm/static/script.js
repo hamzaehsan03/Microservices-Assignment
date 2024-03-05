@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const jokeTypeSelect = document.getElementById('jokeType');
+    const jokeFormSelect = document.getElementById('jokeForm');
+    const submitJokeButton = document.getElementById('submitJoke');
 
     const typesAPI = 'http://localhost:80/type';
-
 
     async function fetchJokeTypes() {
         try 
@@ -40,8 +41,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    async function getSubmission()
+    {
+        const jokeType = document.getElementById('jokeType').value();
+        const jokeText = document.getElementById('jokeText').value();
+
+        try
+        {
+            fetch('/sub', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: jokeType,
+                    jokeText: jokeText
+                })
+            })
+            .then(response => {
+                if (!response.ok)
+                {
+                    throw new Error('Failed to submit joke')
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.log(`Error ${error}`)
+            });
+        }
+        catch(error)
+        {
+            console.log(`Error ${error}`)
+        }
+    }
+
     fetchJokeTypes();
 
     jokeTypeSelect.addEventListener('click', fetchJokeTypes);
+    submitJokeButton.addEventListener('click', getSubmission);
 
 });
