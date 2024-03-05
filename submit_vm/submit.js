@@ -37,23 +37,33 @@ app.get('/types', async (req, res) => {
 
 
 app.post('/sub', async (req, res) => {
-
     const {type, jokeText} = req.body;
 
     const queue = 'SUBMITTED_JOKES';
-    const conn = await amqp.connect('amqp://rabbitmq')
+    try 
+    {
+        const conn = await amqp.connect('amqp://rabbitmq');
+        console.log(`Connected to RabbitMQ`);
+        
+        const channel = await conn.createChannel();
+        await channel.assertQueue(queue, {durable: false});
 
-    console.log(`Connected to RabbitMQ`);
-    
-    const channel = await createConnection.createChannel();
-    await channel.assertQueue(queue, {durable: false});
+        const message = {
+            type: type,
+            jokeText: jokeText
+        };
 
-    channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
-    console.log(`Message sent to ${queue}: ${JSON.stringify(message)}`);  
+        channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
+        console.log(`Message sent to ${queue}: ${JSON.stringify(message)}`);  
 
-})
-
-
+        res.status(200).send('Joke submitted');
+    } 
+    catch (error)
+     {
+        console.error('Failed to send message to RabbitMQ:', error);
+        res.status(500).send('Failed to submit joke');
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`)
