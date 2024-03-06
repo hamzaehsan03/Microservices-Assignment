@@ -27,19 +27,19 @@ services:
     restart: unless-stopped
 
 
-  # etl_service:
-  #   build:
-  #     context: ./etl_application
-  #     dockerfile: Dockerfile
+  etl_service:
+    build:
+      context: ./etl_application
+      dockerfile: Dockerfile
     
-  #   image: hamzaehsan03/etl-application
-  #   pull_policy: always
-  #   container_name: etl-application
-  #   env_file:
-  #     - .env
-  #   restart: unless-stopped  
-  #   depends_on:
-  #    - db
+    image: hamzaehsan03/etl-application
+    pull_policy: always
+    container_name: etl-application
+    env_file:
+      - .env
+    restart: unless-stopped  
+    depends_on:
+     - db
 
 volumes:
   mysql-data:

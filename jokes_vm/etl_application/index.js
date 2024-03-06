@@ -2,7 +2,7 @@ require('dotenv').config();
 const amqp = require('amqplib');
 const mysql = require('mysql2');
 
-const queue = 'jokesQueue';
+const queue = 'SUBMITTED_JOKES';
 
 async function connectToDatabase() {
     const db = mysql.createConnection({
@@ -15,34 +15,11 @@ async function connectToDatabase() {
     return db.promise();
 }
 
-async function connectToRabbitMQ(retryCount = 0) {
-    try 
-    {
-        const conn = await amqp.connect('amqp://rabbitmq');
-        console.log('Connected to RabbitMQ.');
-        return conn;
-    } 
-    catch (err) 
-    {
-        console.error(`Error connecting to RabbitMQ: ${err}`);
-        if (retryCount < 5) 
-        {
-            console.log(`Retrying to connect to RabbitMQ... Attempt ${retryCount + 1}`);
-            await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
-            return connectToRabbitMQ(retryCount + 1);
-        } 
-        else 
-        {
-            console.error('Failed to connect to RabbitMQ after retries. Exiting.');
-            process.exit(1);
-        }
-    }
-}
-
 async function consumeMessage() {
     try 
     {
-        const conn = await connectToRabbitMQ();
+        // add to env
+        const conn = await amqp.connect('amqp://admin:admin@rabbitmq');
         const channel = await conn.createChannel();
 
         await channel.assertQueue(queue, { durable: false });
