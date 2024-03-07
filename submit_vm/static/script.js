@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitJokeButton = document.getElementById('submitJoke');
 
     //const typesAPI = 'http://localhost:80/type';
-    const typesAPI = 'http://10.0.0.7:80/type';
+    //const typesAPI = 'http://10.0.0.7:80/type';
+    const typesAPI = 'http://4.234.160.46:80/type';
 
     async function fetchJokeTypes() {
         try 
