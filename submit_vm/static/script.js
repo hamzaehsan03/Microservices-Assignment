@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const jokeFormSelect = document.getElementById('jokeForm');
     const submitJokeButton = document.getElementById('submitJoke');
 
-    const typesAPI = 'http://localhost:80/type';
+    //const typesAPI = 'http://localhost:80/type';
+    const typesAPI = 'http://10.0.0.7:80/type';
 
     async function fetchJokeTypes() {
         try 

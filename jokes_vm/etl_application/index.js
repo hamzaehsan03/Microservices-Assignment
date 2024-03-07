@@ -1,7 +1,9 @@
 require('dotenv').config();
 const amqp = require('amqplib');
 const mysql = require('mysql2');
+const cors = require('cors');
 
+app.use(cors());
 const queue = 'SUBMITTED_JOKES';
 
 async function connectToDatabase() {
@@ -30,7 +32,7 @@ async function getTypeID(typeName) {
 
 async function consumeMessage() {
     try {
-        const conn = await amqp.connect('amqp://admin:admin@host.docker.internal');
+        const conn = await amqp.connect('amqp://admin:admin@10.0.0.7');
         const channel = await conn.createChannel();
 
         await channel.assertQueue(queue, { durable: false });
