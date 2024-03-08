@@ -1,9 +1,8 @@
-require('dotenv').config();
+const cors = require('cors');
 const amqp = require('amqplib');
 const mysql = require('mysql2');
 const express = require('express');
 const app = express();
-const cors = require('cors');
 
 app.use(cors());
 const queue = 'SUBMITTED_JOKES';
@@ -34,7 +33,7 @@ async function getTypeID(typeName) {
 
 async function consumeMessage() {
     try {
-        const conn = await amqp.connect('amqp://admin:admin@20.19.33.124');
+        const conn = await amqp.connect('amqp://admin:admin@10.0.0.6');
         const channel = await conn.createChannel();
 
         await channel.assertQueue(queue, { durable: false });

@@ -1,6 +1,6 @@
+const cors = require('cors');
 const express = require ('express');
 const amqp = require('amqplib');
-const cors = require('cors');
 const app = express();
 const path = require('path')
 
@@ -27,14 +27,16 @@ app.get('/types', async (req, res) => {
 
     try
     {
-        const result = await getTypes();
-        res.send(result);
+        const response = await fetch('http://10.0.0.7:80/type');
+        const data = await response.json();
+        res.json(data);
     }
-    catch (err)
+    catch(error)
     {
-        console.error(`Error in fetching /types from API ${err}`);
-        res.status(500).send(err);
+        console.error(`Failed to fetch types: ${error}`);
+        res.status(500).send('failed to fetch types');
     }
+    
 })
 
 
