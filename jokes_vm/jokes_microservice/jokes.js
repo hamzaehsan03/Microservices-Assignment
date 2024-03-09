@@ -61,7 +61,7 @@ app.get('/script.js', (req, res) => {
 });
 
 
-app.get('/joke/type', async(req, res) => {
+app.get('/type', async(req, res) => {
 
     try 
     {
