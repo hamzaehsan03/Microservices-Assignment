@@ -41,12 +41,44 @@ app.get('/script.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'static', 'script.js'));
 });
 
+/**
+ * @swagger
+ * /types:
+ *   get:
+ *     summary: Retrieves a list of joke types
+ *     description: Fetches a list of available joke types from the Jokes API.
+ *     responses:
+ *       200:
+ *         description: A JSON array of joke types
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                     description: The unique identifier of the joke type.
+ *                   type_name:
+ *                     type: string
+ *                     example: 'general'
+ *                     description: The name of the joke type.
+ *       500:
+ *         description: Server error
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: 'failed to fetch types'
+ */
 
 app.get('/types', async (req, res) => {
 
     try
     {
-        const response = await fetch('http://10.0.0.7:80/type');
+        const response = await fetch(process.env.JOKES_API_PRIVATE_IP);
         const data = await response.json();
         res.json(data);
     }
@@ -90,8 +122,7 @@ app.post('/sub', async (req, res) => {
     const queue = 'SUBMITTED_JOKES';
     try 
     {
-        //const conn = await amqp.connect('amqp://rabbitmq');
-        const conn = await amqp.connect('amqp://admin:admin@rabbitmq');
+        const conn = await amqp.connect(process.env.RABBITMQ_IP);
         console.log(`Connected to RabbitMQ`);
         
         const channel = await conn.createChannel();
