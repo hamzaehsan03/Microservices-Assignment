@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const jokeType = document.getElementById('jokeType').value;
         const jokeText = document.getElementById('jokeText').value;
     
-        fetch('/sub', {
+        fetch('/sub/sub', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
