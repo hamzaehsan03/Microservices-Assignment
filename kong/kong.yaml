@@ -1,0 +1,23 @@
+_format_version: "3.0"
+
+services:
+  - name: jokes-service
+    url: http://10.0.0.7:3000
+    routes:
+      - name: jokes
+        paths:
+          - /joke/
+
+  - name: submit-service
+    url: http://10.0.0.6:4200
+    routes:
+      - name: submit
+        paths:
+          - /sub/
+
+  # - name: mod-service
+  #   url: http://[ip]
+  #   routes:
+  #     - name: moderator
+  #       paths:
+  #         - /mod/ 
