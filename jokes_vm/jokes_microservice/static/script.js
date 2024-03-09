@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function fetchJokeTypes() {
         try 
         {
-            const response = await fetch('/type');
+            const response = await fetch('/joke/joke/type');
             if (!response.ok) 
             {
                 throw new Error('Failed to fetch joke types');
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const type = jokeTypeSelect.value;
         try 
         {
-            const response = await fetch(`/joke?type=${encodeURIComponent(type)}`);
+            const response = await fetch(`/joke/joke?type=${encodeURIComponent(type)}`);
             if (!response.ok) 
             {
                 throw new Error('Failed to fetch joke');

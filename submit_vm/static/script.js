@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //const typesAPI = 'http://localhost:80/type';
     //const typesAPI = 'http://10.0.0.7:80/type';
-    const typesAPI = 'http://20.77.13.80/types';
+    const typesAPI = 'http://172.187.208.204/sub/types';
 
     async function fetchJokeTypes() {
         try 
