@@ -33,7 +33,7 @@ async function getTypeID(typeName) {
 
 async function consumeMessage() {
     try {
-        const conn = await amqp.connect('amqp://admin:admin@10.0.0.6');
+        const conn = await amqp.connect(process.env.RABBITMQ_SUBMIT_IP);
         const channel = await conn.createChannel();
 
         await channel.assertQueue(queue, { durable: false });
