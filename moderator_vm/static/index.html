@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Moderate Jokes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Moderate Submitted Jokes</h1>
+        <div id="jokeContainer">
+            <label for="jokeText">Joke:</label>
+            <textarea id="jokeText"></textarea>
+
+            <label for="jokeType">Type:</label>
+            <select id="jokeType"></select>
+            <button id="addType">Add New Type</button>
+
+            <button id="submitJoke">Submit</button>
+            <button id="deleteJoke">Delete</button>
+            <button id="nextJoke">Next Joke</button>
+        </div>
+
+        <div id="noJokeMessage" style="display: none;">
+            <p>No jokes available. Polling for new jokes...</p>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
