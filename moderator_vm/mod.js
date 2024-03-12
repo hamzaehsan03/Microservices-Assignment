@@ -104,36 +104,42 @@ app.get('/mod', async (req, res) => {
 // });
 
 app.post('/mod', async (req, res) => {
+    const { joke, action } = req.body;
+    const queue = 'MODERATED_JOKES';
 
-    const {joke, action} = res.body;
+    // Extract jokeText and type from the joke object
+    const { type, jokeText } = joke; // Assuming 'joke' structure matches this
 
-    if (action == 'submit')
+    if (action === 'submit') 
     {
-        try
+        try 
         {
-            const conn = await amqp.connect(process.env.RABBITMQ_IP);
+            const conn = await amqp.connect('amqp://admin:admin@rabbitmq');
             const channel = await conn.createChannel();
-            await channel.assertQueue('MODERATED_JOKES', {durable: true});
-            channel.sendToQueue('MODERATED_JOKES', Buffer.from(JSON.stringify(joke)));
+            await channel.assertQueue(queue, { durable: true });
+
+            // Construct a new object with the extracted values if necessary
+            const moderatedJoke = { type, jokeText }; // Adjusted to send structured joke
+
+            channel.sendToQueue(queue, Buffer.from(JSON.stringify(moderatedJoke)));
             res.status(200).send('Joke submitted to MODERATED_JOKES');
-        }
-        catch(error)
+        } 
+        catch (error) 
         {
             console.error(`Failed to submit joke to MODERATED_JOKES: ${error}`);
             res.status(500).send('Failed to process moderated joke');
         }
-
-    }
-    else if (action == 'discard')
+    } 
+    else if (action === 'discard') 
     {
         res.status(200).send('Joke discarded');
-    }
-    else
+    } 
+    else 
     {
         res.status(400).send('Invalid Action');
     }
+});
 
-})
 
 
 app.listen(PORT, () => {

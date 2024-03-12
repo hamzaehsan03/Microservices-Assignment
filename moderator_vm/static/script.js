@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const body = {
                 joke: {
                     ...currentJoke,
-                    joke_text: jokeTextElement.value,
-                    type_name: jokeTypeSelect.value
+                    jokeText: jokeTextElement.value,
+                    type: jokeTypeSelect.value
                 },
                 action: action
             };

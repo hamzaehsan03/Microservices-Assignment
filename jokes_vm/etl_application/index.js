@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 
 app.use(cors());
-const queue = 'SUBMITTED_JOKES';
+const queue = 'MODERATED_JOKES';
 
 async function connectToDatabase() {
     const db = mysql.createConnection({
@@ -36,7 +36,7 @@ async function consumeMessage() {
         const conn = await amqp.connect(process.env.RABBITMQ_MODERATE_IP);
         const channel = await conn.createChannel();
 
-        await channel.assertQueue(queue, { durable: false });
+        await channel.assertQueue(queue, { durable: true });
         console.log(`Waiting for messages in ${queue}.`);
 
         channel.consume(queue, async (message) => {
