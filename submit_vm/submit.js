@@ -126,7 +126,7 @@ app.post('/sub', async (req, res) => {
         console.log(`Connected to RabbitMQ`);
         
         const channel = await conn.createChannel();
-        await channel.assertQueue(queue, {durable: false});
+        await channel.assertQueue(queue, {durable: true});
 
         const message = {
             type: type,

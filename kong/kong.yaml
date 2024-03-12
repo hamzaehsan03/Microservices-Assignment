@@ -20,4 +20,4 @@ services:
     routes:
       - name: moderator
         paths:
-          - /mod/ 
+          - /mod/

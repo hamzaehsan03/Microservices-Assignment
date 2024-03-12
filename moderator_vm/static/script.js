@@ -37,8 +37,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             noJokeMessageDiv.style.display = 'none';
             currentJoke = await response.json();
-            jokeTextElement.value = currentJoke.joke_text;
-            jokeTypeSelect.value = currentJoke.type_name;
+            console.log(currentJoke);
+            jokeTextElement.value = currentJoke.jokeText; // Adjusted from currentJoke.joke_text
+            jokeTypeSelect.value = currentJoke.type; // Adjusted from currentJoke.type_name
         } catch (error) {
             console.error('Error fetching joke:', error);
         }
