@@ -30,7 +30,7 @@ app.get('/mod', async (req, res) => {
 
     try 
     {
-        const conn = await amqp.connect(process.env.RABBITMQ_SUBMISSION_IP);
+        const conn = await amqp.connect(process.env.RABBITMQ_IP);
         console.log(`Connected to RabbitMQ`);
 
         const channel = await conn.createChannel();
@@ -51,7 +51,6 @@ app.get('/mod', async (req, res) => {
             } 
             else 
             {
-                // No message was available at the time of the request
                 res.status(404).send({ message: "No jokes available for moderation." });
             }
         });
@@ -62,6 +61,38 @@ app.get('/mod', async (req, res) => {
         res.status(500).send('Failed to retrieve');
     }
 });
+
+app.post('/mod', async (req, res) => {
+
+    const {joke, action} = res.body;
+
+    if (action == 'submit')
+    {
+        try
+        {
+            const conn = await amqp.connect(process.env.RABBITMQ_IP);
+            const channel = await conn.createChannel();
+            await channel.assertQueue('MODERATED_JOKES', {durable: true});
+            channel.sendToQueue('MODERATED_JOKES', Buffer.from(JSON.stringify(joke)));
+            res.status(200).send('Joke submitted to MODERATED_JOKES');
+        }
+        catch(error)
+        {
+            console.error(`Failed to submit joke to MODERATED_JOKES: ${error}`);
+            res.status(500).send('Failed to process moderated joke');
+        }
+
+    }
+    else if (action == 'discard')
+    {
+        res.status(200).send('Joke discarded');
+    }
+    else
+    {
+        res.status(400).send('Invalid Action');
+    }
+
+})
 
 
 app.listen(PORT, () => {
