@@ -15,9 +15,9 @@ services:
         paths:
           - /sub/
 
-  # - name: mod-service
-  #   url: http://[ip]
-  #   routes:
-  #     - name: moderator
-  #       paths:
-  #         - /mod/ 
+  - name: moderator-service
+    url: http://10.0.0.10:4100
+    routes:
+      - name: moderator
+        paths:
+          - /mod/ 
