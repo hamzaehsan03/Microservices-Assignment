@@ -10,7 +10,7 @@ app.use(cors()); // Allow for the submit microservice to access /type endpoint
 
 let db;
 
-function connectToDatabase(retryCount = 0) 
+function connectToDatabase() 
 {
     db = mysql.createConnection ({
         host: process.env.DB_HOST || 'localhost',
@@ -23,20 +23,12 @@ function connectToDatabase(retryCount = 0)
         if (err) 
         {
             console.error(`Error connecting to the database: ${err}`);
-        //    if (retryCount < 5) {
-
-        //        setTimeout(() => connectToDatabase(retryCount + 1), 5000); // Retry after 5 seconds
-        //    } 
-        //    else 
-        //    {
-        //        console.error('Failed to connect to the database after retries. Exiting.');
-                process.exit(1); // Exit the application if unable to connect
-        //    }
+            process.exit(1); 
         } 
         else 
         {
             console.log('Connected to database.');
-            startServer(); // Start the server once the database connection is established
+            startServer(); 
         }
     });
 }
@@ -49,7 +41,6 @@ app.get('/type', async(req, res) => {
 
     try 
     {
-        // Log the db variable to see if it's defined
         console.log('DB connection in /type endpoint:', db);
         
         const result = await getTypes();
