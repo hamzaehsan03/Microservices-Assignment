@@ -29,17 +29,7 @@ const options = {
 const swaggerDocs = swaggerJsDoc(options);
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-app.get(['/', 'index.html'], (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'index.html'))
-});
-
-app.get('/style.css', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'style.css'));
-});
-
-app.get('/script.js', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'script.js'));
-});
+app.use(express.static(path.join(__dirname, 'static')));
 
 /**
  * @swagger

@@ -43,23 +43,7 @@ function connectToDatabase(retryCount = 0)
 
 connectToDatabase();
 
-app.get(['/', '/index.html'], (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'index.html'));
-});
-
-// I'm not really sure why this is required
-// I think the express.static middleware wasn't correctly configured to serve the files from the directory, so explicit routes fixes that
-// I reformatted a lot of the folders and names when creating docker containers, so it could be an issue with caching, though I still don't like this solution
-// I'll fix this soon, probably using path.resolve, this works well as a temporary patch now though I guess
-
-app.get('/style.css', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'style.css'));
-});
-
-app.get('/script.js', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'script.js'));
-});
-
+app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/type', async(req, res) => {
 

@@ -10,17 +10,7 @@ app.use(express.static('public'));
 
 const PORT = process.env.MODERATOR_PORT || 3100
 
-app.get(['/', 'index.html'], (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'index.html'))
-});
-
-app.get('/style.css', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'style.css'));
-});
-
-app.get('/script.js', (req, res) => {
-    res.sendFile(path.join(__dirname, 'static', 'script.js'));
-});
+app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/types', async (req, res) => {
 
