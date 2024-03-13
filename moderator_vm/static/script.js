@@ -4,12 +4,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitJokeButton = document.getElementById('submitJoke');
     const deleteJokeButton = document.getElementById('deleteJoke');
     const nextJokeButton = document.getElementById('nextJoke');
-    const addTypeButton = document.getElementById('addType');
     const noJokeMessageDiv = document.getElementById('noJokeMessage');
 
     let currentJoke = null;
+    let pollingInterval = null; // Variable to store the interval ID
 
-    // Fetch joke types and populate the select dropdown
+    const startPolling = () => {
+        if (pollingInterval) return; // Avoid starting multiple intervals
+        pollingInterval = setInterval(fetchJoke, 5000); // Poll every 5 seconds
+    };
+
+    const stopPolling = () => {
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+        }
+    };
+
     async function fetchJokeTypes() {
         try {
             const response = await fetch('/mod/types');
@@ -27,25 +38,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Fetch a joke for moderation
     async function fetchJoke() {
         try {
             const response = await fetch('/mod/mod');
             if (!response.ok) {
                 noJokeMessageDiv.style.display = 'block';
+                stopPolling(); // Stop polling if there are no jokes
                 throw new Error('No jokes available for moderation.');
             }
             noJokeMessageDiv.style.display = 'none';
             currentJoke = await response.json();
-            console.log(currentJoke);
-            jokeTextElement.value = currentJoke.jokeText; // Adjusted from currentJoke.joke_text
-            jokeTypeSelect.value = currentJoke.type; // Adjusted from currentJoke.type_name
+            jokeTextElement.value = currentJoke.jokeText;
+            jokeTypeSelect.value = currentJoke.type;
+            startPolling(); // Start polling for the next joke
         } catch (error) {
             console.error('Error fetching joke:', error);
         }
     }
 
-    // Handle joke submission or deletion
     async function handleJoke(action) {
         if (!currentJoke) return;
         try {
@@ -63,22 +73,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(body)
             });
             if (!response.ok) throw new Error(`Failed to ${action} joke`);
-            fetchJoke(); // Fetch the next joke for moderation
+            fetchJoke(); // Immediately try fetching the next joke
         } catch (error) {
             console.error(`Error ${action} joke:`, error);
         }
     }
 
-    // Event listeners
+    fetchJokeTypes();
+    // Initialize the polling when the document is loaded
+    startPolling();
+
+    // Set up event listeners
     submitJokeButton.addEventListener('click', () => handleJoke('submit'));
     deleteJokeButton.addEventListener('click', () => handleJoke('discard'));
     nextJokeButton.addEventListener('click', fetchJoke);
-    addTypeButton.addEventListener('click', () => {
-        // Implement logic to add a new type
-        // This might involve displaying a prompt for the moderator to enter a new type,
-        // then updating the types list by calling fetchJokeTypes again.
-    });
-
-    fetchJokeTypes(); // Initial fetch of types
-    fetchJoke(); // Initial fetch of a joke for moderation
 });
+
