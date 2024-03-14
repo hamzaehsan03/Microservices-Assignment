@@ -10,6 +10,7 @@ app.use(cors()); // Allow for the submit microservice to access /type endpoint
 
 let db;
 
+// Function to connect to the database
 function connectToDatabase() 
 {
     db = mysql.createConnection ({
@@ -35,8 +36,10 @@ function connectToDatabase()
 
 connectToDatabase();
 
+// Serve static files from the static directory
 app.use(express.static(path.join(__dirname, 'static')));
 
+// GET endpoint for fetching types
 app.get('/type', async(req, res) => {
 
     try 
@@ -54,6 +57,7 @@ app.get('/type', async(req, res) => {
 
 })
 
+// GET endpoint for fetching jokes 
 app.get('/joke', async (req, res) => {
     
     try 
@@ -71,24 +75,28 @@ app.get('/joke', async (req, res) => {
 
 });
 
+// Function to get jokes from the database
 async function getJokes(type = 'any', count = 1) {
+
+    // Build an SQL query depending on the options
     let sql = '';
     const params = [];
 
-    // Adjust the query to join jokes with their types
+    // Select a random joke if no specific type is selected
     if (type === 'any') 
     {
-        // If 'any' is selected, simply return random jokes without filtering by type
         sql = `SELECT jokes.* FROM jokes ORDER BY RAND() LIMIT ?`;
         params.push(parseInt(count, 10) || 1);
     } 
+
+    // Filter the joke by the type selected
     else 
     {
-        // Join with the joke_types table to filter by type_name
         sql = `SELECT jokes.* FROM jokes JOIN joke_types ON jokes.type_id = joke_types.id WHERE joke_types.type_name = ? ORDER BY RAND() LIMIT ?`;
         params.push(type, parseInt(count, 10) || 1);
     }
 
+    // Return a promise that resolves with the query results or rejects with an error
     return new Promise((resolve, reject) => {
         db.query(sql, params, (err, results) => {
             if (err) 
@@ -103,6 +111,7 @@ async function getJokes(type = 'any', count = 1) {
     });
 }
 
+// Fetch all the types from the database
 async function getTypes(){
     const result = new Promise((resolve, reject) => {
         const sql = `select * from joke_types`;
@@ -120,6 +129,7 @@ async function getTypes(){
     return result;
 }
 
+// Start the server
 function startServer() 
 {
     app.listen(PORT, () => {
