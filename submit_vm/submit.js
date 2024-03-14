@@ -4,15 +4,16 @@ const amqp = require('amqplib');
 const app = express();
 const path = require('path')
 
+// Swagger doc tools
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 
 app.use(express.json());
-app.use(express.static('public'));
 app.use(cors());
 
 const PORT = process.env.SUBMIT_PORT || 3200
 
+// Swagger config object
 const options = {
     definition: {
 
@@ -26,9 +27,12 @@ const options = {
     apis: ['submit.js']
 };
 
+// Generate swagger docs based on the options
+// Serve docs to the endpoint
 const swaggerDocs = swaggerJsDoc(options);
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
+// Serve static files from the static directory
 app.use(express.static(path.join(__dirname, 'static')));
 
 /**
@@ -63,7 +67,7 @@ app.use(express.static(path.join(__dirname, 'static')));
  *               type: string
  *               example: 'failed to fetch types'
  */
-
+// GET endpoint to fetch types from jokes api
 app.get('/types', async (req, res) => {
 
     try
@@ -105,19 +109,23 @@ app.get('/types', async (req, res) => {
  *       500:
  *         description: Failed to submit joke
  */
-
+// POST endpoint to submit jokes onto the rabbitmq queue
 app.post('/sub', async (req, res) => {
+    
+    // Break down the request body into it's type and text
     const {type, jokeText} = req.body;
 
     const queue = 'SUBMITTED_JOKES';
     try 
     {
+        // Connect to the queue and declare a channel
         const conn = await amqp.connect(process.env.RABBITMQ_IP);
         console.log(`Connected to RabbitMQ`);
         
         const channel = await conn.createChannel();
         await channel.assertQueue(queue, {durable: true});
 
+        // Create a message object and send it to the queue
         const message = {
             type: type,
             jokeText: jokeText
