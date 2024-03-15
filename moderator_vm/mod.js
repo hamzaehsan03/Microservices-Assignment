@@ -36,7 +36,7 @@ app.get('/mod', async (req, res) => {
     try 
     {
         // Connect to RabbitMQ and try to get messages from the SUBMITTED_JOKES queue
-        const conn = await amqp.connect(process.env.RABBITMQ_IP);
+        const conn = await amqp.connect(process.env.RABBITMQ_SUBMIT_IP);
         console.log(`Connected to RabbitMQ`);
 
         const channel = await conn.createChannel();
@@ -82,7 +82,7 @@ app.post('/mod', async (req, res) => {
         {
             // Connect to RabbitMQ and create a a channel
             // Construct a new object with the values submitted and send the structured joke to the MODERATED_JOKES queue 
-            const conn = await amqp.connect('amqp://admin:admin@rabbitmq');
+            const conn = await amqp.connect(process.env.RABBITMQ_IP);
             const channel = await conn.createChannel();
             await channel.assertQueue(queue, { durable: true });
 
